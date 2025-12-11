@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snehashis Saha | UI/UX & Graphic Designer</title>
+    <meta name="description" content="Portfolio of Snehashis Saha, a UI/UX & Graphic Designer based in India.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.figma.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        offwhite: '#FDFDFD',
+                        charcoal: '#121212',
+                        accent: '#2563EB',
+                        subtle: '#F4F4F5',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'marquee': 'marquee 40s linear infinite',
+                        'modal-in': 'modalFadeIn 0.3s ease-out forwards',
+                        'spin-slow': 'spin 3s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        modalFadeIn: {
+                            'from': { opacity: '0', transform: 'scale(0.95)' },
+                            'to': { opacity: '1', transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDFDFD;
+            color: #121212;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        ::selection {
+            background-color: #2563EB;
+            color: white;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+        "jspdf": "https://esm.sh/jspdf@2.5.1"
+      }
+    }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module" data-presets="react,typescript">
+        import React, { useState, useEffect } from 'react';
+        import ReactDOM from 'react-dom/client';
+        import { 
+            Menu, X, AlertTriangle, ArrowUpRight, Download, Play, 
+            Target, Lightbulb, User, FileText, Loader2, Linkedin, AtSign 
+        } from 'lucide-react';
+        import { jsPDF } from 'jspdf';
+
+        // --- CONSTANTS & DATA ---
+        const SUPABASE_CONFIG = {
+            PROJECT_URL: "https://vclukdiezigpjbfnjdyf.supabase.co", 
+            BUCKET: "Portfolio Work PDF" 
+        };
+
+        const RESUME = {
+            name: "SNEHASHIS SAHA",
+            role: "UI/UX & Graphic Designer",
+            contact: {
+                phone: "+91 933-019-9588",
+                email: "aaakashsaha2001@gmail.com",
+                address: "75, Sheoraphuli, Hooghly, WB",
+                linkedin: "https://www.linkedin.com/in/snehashis-saha-208355191/",
+                behance: "https://www.behance.net/snehashissaha",
+                cv: "Snehashis_Saha_CV.pdf"
+            },
+            summary: "A UI/UX and graphic designer with over a year of experience focused on boosting user engagement and maintaining brand consistency. Skilled in Figma and Adobe Creative Suite, I've redesigned mobile app signup pages and created effective digital content. My aim is to deliver user-friendly designs that meet client goals and user needs.",
+            bio: {
+                headline: "Designing clarity from chaos.",
+                subHeadline: "UI/UX Designer crafting clean, conversion-focused digital experiences.",
+                intro: "I’m Snehashis, a multidisciplinary designer based in India. I bridge the gap between aesthetic appeal and functional precision. My work is grounded in the belief that good design isn't just about how it looks, but how it works for the people using it.",
+                valueProp: "With a background in both technical drawing (AutoCAD) and creative visual design, I bring a unique attention to detail to every pixel. Whether it's a complex utility app or a high-conversion landing page, I focus on solving real user problems."
+            },
+            skills: [
+                "UI/UX Design", "Figma", "Adobe XD", "Photoshop", "Illustrator", "Indesign", 
+                "AutoCAD LT", "HTML/CSS", "JavaScript", "User Research", "Wireframing", "Prototyping"
+            ],
+            education: [
+                {
+                    degree: "Bachelor of Commerce in Accounting",
+                    school: "University of Calcutta",
+                    year: "Jan 2020 - Jun 2022",
+                    desc: "Relevant coursework in Accounts, Tally and advanced Excel."
+                },
+                {
+                    degree: "Diploma in UX/UI Design and Web Design",
+                    school: "Dronaseekar.co.in",
+                    year: "Aug 2015 - Aug 2019",
+                    desc: "Specialization in Figma, Photoshop, Adobe XD, Illustrator."
+                }
+            ],
+            experience: [
+                {
+                    id: 1,
+                    role: "Graphic & AutoCAD Designer",
+                    company: "Scube Consultancy Services",
+                    period: "July 2024 - Present",
+                    points: [
+                        "Designed social media posts, EDMs, banners, and brochures for digital and print marketing, ensuring brand consistency.",
+                        "Created detailed AutoCAD drawings for clients like Infosys, maintaining precision and technical accuracy."
+                    ]
+                },
+                {
+                    id: 2,
+                    role: "Media & UX Designer",
+                    company: "Design Research Council of India",
+                    period: "Dec 2023 - Mar 2024",
+                    points: [
+                        "Designed EMagazines to boost branding and engagement.",
+                        "Created social media posts to promote company courses.",
+                        "Developed targeted content for individual course promotions."
+                    ]
+                },
+                {
+                    id: 3,
+                    role: "UI Designer Intern",
+                    company: "Codsoft Pvt Ltd",
+                    period: "Aug 2023 - Sep 2023",
+                    points: [
+                        "Redesigned a mobile app signup page, improving functionality and user experience.",
+                        "Designed a restaurant website with a user-friendly and visually appealing interface.",
+                        "Developed an e-commerce site with intuitive navigation and a seamless shopping experience."
+                    ]
+                }
+            ],
+            projects: [
+                {
+                    id: 1,
+                    title: "Auto Hire",
+                    category: "case-study",
+                    displayCategory: "Luxury Rental Platform",
+                    description: "A comprehensive rental ecosystem (Web & App) allowing users to find and book luxury cars in 3 easy steps. Features include location-based search, 'Best Price Guarantee', and a unified booking flow.",
+                    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&q=80&w=1600",
+                    tags: ["Web Design", "App Design", "UX Research", "Figma"],
+                    pdfFile: "Car Rental App UX Case Study New.pdf",
+                    prototypeUrl: "https://www.figma.com/proto/OgcyCBItz1YeBzvjJ9KgI1/Untitled?node-id=1-2&starting-point-node-id=1%3A2&t=d5nKs1FqxTOSFVAc-1",
+                    problem: "Users struggled with fragmented rental processes, hidden fees, and lack of transparent vehicle information in existing solutions.",
+                    solution: "Designed a unified '3-Step Booking' flow (Location > Date > Book) with clear price breakdowns, real-time availability, and vehicle comparison tools.",
+                    outcome: "Streamlined the user journey, reducing booking time significantly in prototype testing. Integrated 'Best Price Guarantee' to build trust.",
+                    featured: true,
+                    process: [
+                        { step: "Research", desc: "Conducted 10 user interviews & 34 surveys. Found that 70% of users prioritize quality over quantity." },
+                        { step: "Persona", desc: "Created 'Akash Saha', a 23yo designer who values cultural experiences but needs affordable luxury." },
+                        { step: "Wireframing", desc: "Developed low-fidelity screens to map out the 'Search -> Select -> Book' flow." },
+                        { step: "UI Design", desc: "Crafted a dark-mode premium aesthetic using Hex #1B54C2 (Royal Blue) to evoke trust and luxury." }
+                    ],
+                    personas: [
+                        { name: "Akash Saha", role: "Media & UX Designer", painPoint: "Needs reliable luxury for special occasions without hidden fees." }
+                    ],
+                    research: {
+                        stat: "70%",
+                        statDesc: "Users prioritize vehicle quality transparency."
+                    }
+                },
+                {
+                    id: 2,
+                    title: "Wash HUB",
+                    category: "case-study",
+                    displayCategory: "Utility App Case Study",
+                    description: "A seamless laundry solution for busy urban users featuring pickup scheduling, real-time tracking, and service mapping.",
+                    image: "https://images.unsplash.com/photo-1521656693074-0ef32e80a5d5?q=80&w=1600&auto=format&fit=crop",
+                    tags: ["Mobile App", "User Research", "Figma"],
+                    pdfFile: "Wash Hub Case study New.pdf",
+                    prototypeUrl: "https://www.figma.com/proto/u8jJ1Yb4gjnEZHndX1ml39/TuteDude-Laundry-App-assignment?node-id=50-3&starting-point-node-id=50%3A3&t=Bcuuk3LnHvmm4SiP-1",
+                    problem: "Urban professionals lack time for laundry and suffer from unreliable service providers with no tracking.",
+                    solution: "Created an app with live order tracking (Booked > Picked Up > In Process > Delivered), scheduled pickups, and clear service mapping.",
+                    outcome: "High user satisfaction in testing due to transparency and ease of scheduling. Simplified the complex logistics of laundry into a few taps.",
+                    featured: false,
+                    process: [
+                        { step: "Empathy Map", desc: "Mapped user feelings: 'Anxious about garment safety', 'Frustrated by delays'." },
+                        { step: "User Stories", desc: "Defined core needs: 'As a student, I need low-cost service.' 'As a professional, I need express delivery.'" },
+                        { step: "Info Architecture", desc: "Structured the app into: Home (Booking), Orders (Tracking), Profile (Preferences)." },
+                        { step: "Visual Design", desc: "Used clean whites and blues to symbolize freshness and cleanliness." }
+                    ],
+                    personas: [
+                        { name: "Amit Verma", role: "Student", painPoint: "Needs low-cost, easy-to-use service with reminders." },
+                        { name: "Priya Sharma", role: "IT Worker", painPoint: "Needs flexible delivery slots due to long work hours." }
+                    ],
+                    research: {
+                        stat: "8/10",
+                        statDesc: "Users reported anxiety about not knowing their laundry status."
+                    }
+                },
+                {
+                    id: 4,
+                    title: "Local Matrimony",
+                    category: "case-study",
+                    displayCategory: "Social App Redesign",
+                    description: "Revamped matchmaking platform (Web & App) focusing on local communities with enhanced security, profile verification, and advanced filtering.",
+                    image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=1600",
+                    tags: ["Web Design", "Interaction Design", "Social"],
+                    pdfFile: "Matrimonial App UX Case Study.pdf",
+                    prototypeUrl: "https://www.figma.com/proto/PXrQyPEKYYQ83s67X6qUWN/Untitled?node-id=1-2&starting-point-node-id=1%3A2&t=UTGAcLuobxYg122O-1",
+                    problem: "Users felt unsafe due to fake profiles and overwhelmed by irrelevant matches outside their local community.",
+                    solution: "Introduced strict profile verification (Trust Badges), community-specific filters, and a 'Success Stories' section to build credibility.",
+                    outcome: "Increased user trust and relevance of matches. The new design emphasizes 'Thrills of Dating' while maintaining cultural respect.",
+                    featured: false,
+                    process: [
+                        { step: "Problem Discovery", desc: "Identified key issues: Lack of trust, fake profiles, and inefficient local filtering." },
+                        { step: "Persona Dev", desc: "Rajesh (30, Software Engineer) seeks cultural compatibility. Neha (28, Marketing) seeks independence." },
+                        { step: "Wireframing", desc: "Designed flows for Profile Creation, Secure Messaging, and Match Filtering." },
+                        { step: "High-Fidelity", desc: "Used warm reds and pinks (#FE0D50) to evoke passion and celebration." }
+                    ],
+                    personas: [
+                        { name: "Rajesh Kumar", role: "Software Engineer", painPoint: "Wary of fake profiles and data privacy." },
+                        { name: "Neha Singh", role: "Marketing Pro", painPoint: "Faces societal pressure, needs efficient matchmaking." }
+                    ],
+                    research: {
+                        stat: "Top 3",
+                        statDesc: "Concerns: Fake profiles, Privacy, Irrelevant matches."
+                    }
+                },
+                {
+                    id: 8,
+                    title: "Eco Vogue",
+                    category: "case-study",
+                    displayCategory: "Sustainable Fashion App",
+                    description: "An intuitive mobile platform promoting eco-conscious shopping by offering ethically produced clothing, transparent sourcing information, and a community for sustainable fashion enthusiasts.",
+                    image: "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=1600&auto=format&fit=crop",
+                    tags: ["Mobile App", "Sustainability", "UX Research", "Figma"],
+                    pdfFile: "ECO Vouge Sustainable Fashion App Case Study.pdf",
+                    prototypeUrl: "https://www.figma.com/proto/HKkQOFWevoby4jMKymHxm7/Untitled?node-id=158-3279&t=xs9o9QGHBgAvQFDt-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=158%3A3257&show-proto-sidebar=1",
+                    problem: "Consumers face limited accessibility to sustainable fashion, lack of transparency in supply chains, and higher costs, making eco-friendly choices difficult.",
+                    solution: "Designed a transparent marketplace with 'Eco-Scores', detailed sourcing info, and a second-hand exchange feature to promote a circular fashion economy.",
+                    outcome: "Empowered users to make informed, ethical purchasing decisions while fostering a supportive community focused on reducing environmental impact.",
+                    featured: false,
+                    process: [
+                        { step: "Research", desc: "Conducted 10 user interviews and 34 surveys. Found that 75% of users prioritize quality and durability over fast fashion trends." },
+                        { step: "Persona", desc: "Developed personas like 'Raj', a marketing manager seeking ethical brands, and 'Ananya', who wants affordable sustainable options." },
+                        { step: "Strategy", desc: "Focused on transparency and community to bridge the gap between intent and action in sustainable shopping." },
+                        { step: "UI Design", desc: "Utilized an earth-toned color palette and clean typography to evoke a sense of nature and clarity." }
+                    ],
+                    personas: [
+                        { name: "Raj Patel", role: "Marketing Manager", painPoint: "Frustrated by the lack of verifiable information on sustainable brands." },
+                        { name: "Ananya Sharma", role: "Quality Engineer", painPoint: "Finds sustainable fashion too expensive and hard to locate." }
+                    ],
+                    research: {
+                        stat: "85%",
+                        statDesc: "Users expressed a strong desire to support local artisans and ethical production methods."
+                    }
+                },
+                {
+                    id: 5,
+                    title: "Spark Tech",
+                    category: "web",
+                    displayCategory: "E-commerce Website",
+                    description: "A modern electronics e-commerce platform featuring dynamic product showcases, brand filtering, and a streamlined shopping cart experience.",
+                    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=1600&auto=format&fit=crop", 
+                    tags: ["Web Design", "E-commerce", "UI Design"],
+                    pdfFile: "Ecommerce Website Landing Page.pdf",
+                    prototypeUrl: "https://www.figma.com/proto/TdPE62d09bXG3xQtnKbUmw/Spark-Tech-Ecommerce-site?node-id=1-2&t=dFAJaTrwi0hMx5HK-1",
+                    problem: "Navigating vast electronic catalogs can be overwhelming without clear categorization and deal highlighting.",
+                    solution: "Implemented a clean, blue-themed layout with 'Mega Sales' banners, distinct 'New Arrivals' sections, and intuitive brand navigation.",
+                    outcome: "Created a visually engaging interface that guides users effortlessly from product discovery to checkout.",
+                    featured: false
+                },
+                {
+                    id: 3,
+                    title: "Feast Hub",
+                    category: "branding",
+                    displayCategory: "Restaurant Branding & UI",
+                    description: "Comprehensive branding and UI for a North Indian restaurant chain. Includes online ordering, table booking, and digital menu systems.",
+                    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1600", 
+                    tags: ["Web Design", "Branding", "Food UI"],
+                    pdfFile: "Resturant Website Landing Page.pdf",
+                    prototypeUrl: "https://www.figma.com/proto/5evt52zBHv12nRuwynf5UT/Untitled?node-id=5-2&starting-point-node-id=5%3A2",
+                    problem: "The restaurant lacked a cohesive digital identity and an easy way to book tables online.",
+                    solution: "Developed a warm, appetite-inducing visual identity and a frictionless reservation system.",
+                    outcome: "Established a consistent brand presence across digital and physical touchpoints.",
+                    featured: false
+                },
+                {
+                    id: 6,
+                    title: "Car Rental Website",
+                    category: "web",
+                    displayCategory: "Landing Page",
+                    description: "A high-conversion landing page for the Auto Hire service.",
+                    image: "https://images.unsplash.com/photo-1485291571150-772bcfc10da5?auto=format&fit=crop&q=80&w=1600",
+                    tags: ["Web Design", "Landing Page"],
+                    pdfFile: "Car Rental Website Landing Page.pdf",
+                    featured: false
+                },
+                {
+                     id: 7,
+                     title: "Matrimony Landing Page",
+                     category: "web",
+                     displayCategory: "Landing Page",
+                     description: "Promotional landing page for the Local Matrimony app.",
+                     image: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=1600",
+                     tags: ["Web Design", "Landing Page"],
+                     pdfFile: "Matrimonial Website Landing Page.pdf",
+                     prototypeUrl: "https://www.figma.com/proto/ZrAD1Fl4Vnldm08U2BrpHy/Untitled?node-id=1-2&t=v5Kdz3Go6EDpUhTp-1",
+                     featured: false
+                }
+            ],
+            categories: [
+                { id: 'all', label: 'All Work' },
+                { id: 'case-study', label: 'Case Studies' },
+                { id: 'web', label: 'Web Design' },
+                { id: 'branding', label: 'Branding' },
+            ]
+        };
+
+        // --- UTILS ---
+        const isSupabaseConfigured = () => {
+            return SUPABASE_CONFIG.PROJECT_URL !== "https://YOUR_PROJECT_ID.supabase.co";
+        };
+
+        const getSupabaseUrl = (filename) => {
+            if (!filename) return null;
+            if (filename.startsWith('http')) return filename;
+            
+            const cleanFilename = filename.startsWith('/') ? filename.slice(1) : filename;
+            const bucket = encodeURIComponent(SUPABASE_CONFIG.BUCKET);
+            const file = encodeURIComponent(cleanFilename);
+            
+            return `${SUPABASE_CONFIG.PROJECT_URL}/storage/v1/object/public/${bucket}/${file}`;
+        };
+
+        // --- COMPONENTS ---
+
+        const Button = ({ 
+            children, 
+            primary, 
+            secondary, 
+            href, 
+            target, 
+            download, 
+            onClick,
+            className = ""
+        }) => {
+            const baseClass = "inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-sans font-medium transition-all duration-300 text-sm tracking-wide group border cursor-pointer whitespace-nowrap outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent";
+            
+            let variantClass = "bg-transparent text-charcoal border-gray-200 hover:border-charcoal hover:bg-gray-50"; 
+            
+            if (primary) {
+                variantClass = "bg-charcoal text-white border-transparent hover:bg-accent hover:border-accent hover:scale-105 shadow-md";
+            } else if (secondary) {
+                variantClass = "bg-white text-charcoal border-gray-200 hover:border-gray-300 hover:shadow-sm";
+            }
+
+            const combinedClass = `${baseClass} ${variantClass} ${className}`;
+
+            if (href) {
+                return (
+                    <a 
+                        href={href} 
+                        target={target} 
+                        download={download} 
+                        className={combinedClass} 
+                        onClick={onClick}
+                        rel={target === '_blank' ? "noopener noreferrer" : undefined}
+                    >
+                        {children}
+                        {!download && !target && <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />}
+                        {download && <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />}
+                    </a>
+                );
+            }
+            return (
+                <button onClick={onClick} className={combinedClass}>
+                    {children}
+                </button>
+            );
+        };
+
+        const NavBar = () => {
+            const [scrolled, setScrolled] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [configWarning, setConfigWarning] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+            
+            useEffect(() => {
+                if (!isSupabaseConfigured()) {
+                    setConfigWarning(true);
+                }
+            }, []);
+
+            const toggleMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+
+            return (
+                <React.Fragment>
+                    {configWarning && (
+                        <div className="fixed top-0 left-0 right-0 z-[100] bg-yellow-400 text-charcoal text-center text-xs font-bold py-2 px-4 flex items-center justify-center gap-2">
+                             <AlertTriangle size={16} />
+                             ACTION REQUIRED: Please update the 'SUPABASE_CONFIG' in constants.ts (index.html source) with your Project URL.
+                             <button onClick={() => setConfigWarning(false)} className="ml-4 hover:underline"><X size={14}/></button>
+                        </div>
+                    )}
+                    <nav className={`fixed ${configWarning ? 'top-8' : 'top-0'} left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'py-4 bg-offwhite/90 backdrop-blur-md border-b border-gray-100' : 'py-6 md:py-8 bg-transparent'}`}>
+                        <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
+                            <a href="#" className="font-display font-bold text-xl md:text-2xl tracking-tighter hover:text-accent transition-colors">
+                                SNEHASHIS<span className="text-accent">.</span>
+                            </a>
+                            
+                            {/* Desktop Menu */}
+                            <div className="hidden md:flex items-center gap-10 font-sans text-sm font-medium text-gray-500">
+                                <a href="#work" className="hover:text-charcoal transition-colors">Work</a>
+                                <a href="#about" className="hover:text-charcoal transition-colors">About</a>
+                                <a href="#contact" className="hover:text-charcoal transition-colors">Contact</a>
+                            </div>
+                            <div className="hidden md:flex gap-4">
+                                <Button href="#contact" primary>Let's Talk</Button>
+                            </div>
+
+                            {/* Mobile Menu Toggle */}
+                            <button className="md:hidden p-2 text-charcoal" onClick={toggleMenu} aria-label="Toggle menu">
+                            {mobileMenuOpen ? <X /> : <Menu />}
+                            </button>
+                        </div>
+
+                        {/* Mobile Menu Overlay */}
+                        {mobileMenuOpen && (
+                            <div className="md:hidden absolute top-full left-0 right-0 bg-offwhite border-b border-gray-100 p-6 flex flex-col gap-6 shadow-xl animate-fade-in">
+                                <a href="#work" className="text-lg font-medium text-charcoal" onClick={toggleMenu}>Work</a>
+                                <a href="#about" className="text-lg font-medium text-charcoal" onClick={toggleMenu}>About</a>
+                                <a href="#contact" className="text-lg font-medium text-charcoal" onClick={toggleMenu}>Contact</a>
+                                <Button href="#contact" primary onClick={toggleMenu}>Let's Talk</Button>
+                            </div>
+                        )}
+                    </nav>
+                </React.Fragment>
+            );
+        };
+
+        const Hero = () => {
+            const generateCV = () => {
+                const doc = new jsPDF();
+                
+                // Config
+                const margin = 20;
+                let y = 20;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const contentWidth = pageWidth - (margin * 2);
+
+                const addText = (text, size = 10, font = 'helvetica', style = 'normal', color = '#000000') => {
+                    doc.setFont(font, style);
+                    doc.setFontSize(size);
+                    doc.setTextColor(color);
+                    const splitText = doc.splitTextToSize(text, contentWidth);
+                    doc.text(splitText, margin, y);
+                    y += (splitText.length * doc.getLineHeight() * 0.35) + 2; 
+                };
+
+                // Name
+                addText(RESUME.name, 22, 'helvetica', 'bold', '#2563EB');
+                y += 2;
+                // Role
+                addText(RESUME.role, 14, 'helvetica', 'bold', '#444444');
+                y += 6;
+                
+                // Contact
+                const contactInfo = `${RESUME.contact.phone}  |  ${RESUME.contact.email}`;
+                addText(contactInfo, 10, 'helvetica', 'normal', '#666666');
+                addText(RESUME.contact.address, 10, 'helvetica', 'normal', '#666666');
+                addText(`LinkedIn: ${RESUME.contact.linkedin}`, 10, 'helvetica', 'normal', '#2563EB');
+                y += 8;
+
+                // Summary
+                addText("SUMMARY", 12, 'helvetica', 'bold', '#2563EB');
+                doc.setDrawColor(200, 200, 200);
+                doc.line(margin, y - 1, pageWidth - margin, y - 1);
+                y += 3;
+                addText(RESUME.summary, 10, 'helvetica', 'normal', '#000000');
+                y += 6;
+
+                // Experience
+                addText("WORK EXPERIENCE", 12, 'helvetica', 'bold', '#2563EB');
+                doc.line(margin, y - 1, pageWidth - margin, y - 1);
+                y += 3;
+                
+                RESUME.experience.forEach(exp => {
+                    addText(`${exp.role}`, 11, 'helvetica', 'bold', '#000000');
+                    addText(`${exp.company}  |  ${exp.period}`, 10, 'helvetica', 'italic', '#444444');
+                    
+                    exp.points.forEach(pt => {
+                        doc.setTextColor(0,0,0);
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(9);
+                        doc.text(`• ${pt}`, margin + 5, y);
+                        y += 5;
+                    });
+                    y += 3;
+                });
+                y += 3;
+
+                // Education
+                addText("EDUCATION", 12, 'helvetica', 'bold', '#2563EB');
+                doc.line(margin, y - 1, pageWidth - margin, y - 1);
+                y += 3;
+                
+                RESUME.education.forEach(edu => {
+                    addText(edu.degree, 11, 'helvetica', 'bold');
+                    addText(`${edu.school}  |  ${edu.year}`, 10, 'helvetica', 'italic', '#444444');
+                    if(edu.desc) addText(edu.desc, 9, 'helvetica', 'normal', '#666666');
+                    y += 4;
+                });
+                y += 3;
+
+                // Skills
+                addText("SKILLS", 12, 'helvetica', 'bold', '#2563EB');
+                doc.line(margin, y - 1, pageWidth - margin, y - 1);
+                y += 3;
+                addText(RESUME.skills.join(", "), 10, 'helvetica', 'normal');
+
+                doc.save(RESUME.contact.cv);
+            };
+
+            return (
+                <header className="min-h-[85vh] md:min-h-[90vh] flex flex-col justify-center pt-32 md:pt-48 relative overflow-hidden bg-offwhite">
+                    <div className="container mx-auto px-6 md:px-12 z-10">
+                        <div className="max-w-4xl">
+                            <p className="font-sans text-accent font-semibold tracking-widest text-xs md:text-sm mb-4 md:mb-6 uppercase opacity-0 animate-fade-in" style={{animationDelay: '0.1s'}}>
+                                {RESUME.role}
+                            </p>
+                            <h1 className="font-display text-4xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6 md:mb-8 text-charcoal opacity-0 animate-slide-up" style={{animationDelay: '0.2s'}}>
+                                {RESUME.bio.headline} <br/>
+                                <span className="text-gray-300">experiences.</span>
+                            </h1>
+                            <p className="font-sans text-gray-600 text-base md:text-xl max-w-2xl leading-relaxed mb-8 md:mb-10 opacity-0 animate-slide-up" style={{animationDelay: '0.4s'}}>
+                                {RESUME.bio.subHeadline}
+                            </p>
+                            <div className="flex flex-wrap gap-4 opacity-0 animate-slide-up" style={{animationDelay: '0.6s'}}>
+                                <Button href="#work" primary>View My Work</Button>
+                                <Button onClick={generateCV} secondary download>Download CV</Button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Decorative subtle element */}
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/3 h-full opacity-5 pointer-events-none hidden lg:block">
+                            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full animate-[spin_60s_linear_infinite]">
+                            <path fill="#2563EB" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,81.6,-46.6C91.4,-34.1,98.1,-19.2,95.8,-4.9C93.5,9.4,82.2,23.1,70.8,34.1C59.4,45.1,47.9,53.4,36.1,60.6C24.3,67.8,12.1,73.9,-0.8,75.3C-13.7,76.7,-27.4,73.4,-39.9,66.6C-52.4,59.8,-63.7,49.5,-71.8,37.3C-79.9,25.1,-84.8,11,-83.4,-2.4C-82,-15.8,-74.3,-28.5,-64.3,-39.1C-54.3,-49.7,-42,-58.2,-29.6,-66.2C-17.2,-74.2,-4.7,-81.7,4.8,-89.9L14.3,-98.2"/>
+                        </svg>
+                    </div>
+                </header>
+            );
+        };
+
+        const Marquee = () => (
+            <div className="py-8 md:py-10 border-y border-gray-100 bg-white overflow-hidden relative">
+                <div className="flex whitespace-nowrap animate-marquee">
+                    {[...Array(6)].map((_, i) => (
+                        <div key={i} className="flex gap-8 md:gap-12 mx-4 md:mx-6 items-center">
+                            {RESUME.skills.map((skill, idx) => (
+                                <span key={`${i}-${idx}`} className="text-gray-300 hover:text-charcoal font-display text-xl md:text-2xl font-bold uppercase tracking-wider transition-colors cursor-default">
+                                    {skill}
+                                </span>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        const ProjectCard = ({ project, featured, onOpenModal }) => {
+            const isFeatured = featured === true;
+            const aspectRatio = isFeatured ? 'aspect-video md:aspect-[21/9]' : 'aspect-[4/3]';
+            
+            return (
+                <div className={`group block w-full mb-8 md:mb-12 ${isFeatured ? 'col-span-1 md:col-span-2' : 'col-span-1'}`}>
+                    {/* Image Container */}
+                    <div 
+                        onClick={() => onOpenModal(project)}
+                        className={`overflow-hidden rounded-2xl bg-gray-100 mb-4 md:mb-6 relative shadow-sm transition-all duration-500 hover:shadow-2xl cursor-pointer ${aspectRatio}`}
+                    >
+                        <img 
+                            src={project.image} 
+                            alt={project.title} 
+                            className="h-full w-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+                        />
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-3">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onOpenModal(project);
+                                }}
+                                className="px-5 py-2 md:px-6 md:py-3 bg-white hover:bg-accent hover:text-white rounded-full text-charcoal text-sm md:text-base font-bold transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2"
+                            >
+                                {project.category === 'case-study' ? 'View Case Study' : 'View Project'}
+                                <ArrowUpRight className="w-4 h-4" />
+                            </button>
+                            
+                            {project.prototypeUrl && (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onOpenModal(project);
+                                    }}
+                                    className="px-5 py-2 md:px-6 md:py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full text-white text-sm md:text-base font-bold transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75 flex items-center gap-2"
+                                >
+                                    <Play className="w-4 h-4 fill-current" /> View Prototype
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex flex-col gap-3 md:gap-4">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h3 className="font-display text-xl md:text-2xl font-bold text-charcoal group-hover:text-accent transition-colors">
+                                    {project.title}
+                                </h3>
+                                <p className="font-sans text-xs md:text-sm font-semibold text-gray-400 mt-1 uppercase tracking-wider">
+                                    {project.displayCategory}
+                                </p>
+                            </div>
+                        </div>
+                        <p className="font-sans text-base text-gray-600 line-clamp-2">
+                            {project.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                            {project.tags.map(tag => (
+                                <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md font-medium border border-gray-200">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const CaseStudyModal = ({ project, onClose }) => {
+            const [activeTab, setActiveTab] = useState('overview');
+            const [iframeLoading, setIframeLoading] = useState(true);
+            // New state to keep iframe loaded once activated
+            const [shouldLoadIframe, setShouldLoadIframe] = useState(false);
+
+            useEffect(() => {
+                if (project) {
+                    document.body.style.overflow = 'hidden';
+                    setActiveTab('overview'); 
+                    setIframeLoading(true);
+                    setShouldLoadIframe(false);
+                    
+                    // Optimization: Pre-load the iframe after a short delay so it's ready when user clicks tab.
+                    // This solves the "long loading" perception by using background loading.
+                    const timer = setTimeout(() => {
+                        setShouldLoadIframe(true);
+                    }, 500);
+
+                    return () => {
+                        clearTimeout(timer);
+                        document.body.style.overflow = 'unset';
+                    };
+                } else {
+                    document.body.style.overflow = 'unset';
+                }
+            }, [project]);
+
+            if (!project) return null;
+
+            const pdfUrl = getSupabaseUrl(project.pdfFile);
+            const isConfigured = isSupabaseConfigured();
+            const viewerUrl = pdfUrl 
+                ? `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(pdfUrl)}` 
+                : '';
+            
+            const figmaEmbedUrl = project.prototypeUrl 
+                ? `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(project.prototypeUrl)}`
+                : '';
+
+            return (
+                <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-8">
+                    <div 
+                        className="absolute inset-0 bg-charcoal/90 backdrop-blur-sm transition-opacity" 
+                        onClick={onClose}
+                        aria-hidden="true"
+                    ></div>
+                    
+                    <div className="bg-white w-full h-[95vh] md:h-full max-w-6xl rounded-t-3xl md:rounded-3xl shadow-2xl relative overflow-y-auto animate-modal-in flex flex-col">
+                        
+                        {/* Header Image Area */}
+                        <div className="h-48 md:h-72 shrink-0 relative group">
+                            <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                            <button 
+                                onClick={onClose} 
+                                className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 backdrop-blur-md p-2 rounded-full text-white transition-all border border-white/20 z-20"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+                            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-transparent flex items-end p-6 md:p-10">
+                                <div className="w-full flex flex-col md:flex-row md:items-end justify-between gap-4">
+                                    <div>
+                                        <span className="text-accent font-bold uppercase tracking-wider text-xs md:text-sm bg-accent/10 backdrop-blur-md px-3 py-1 rounded border border-accent/20 mb-3 inline-block text-white">
+                                            {project.displayCategory}
+                                        </span>
+                                        <h2 className="text-3xl md:text-5xl font-display font-bold text-white">{project.title}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tab Navigation */}
+                        {project.prototypeUrl && (
+                            <div className="flex border-b border-gray-200 bg-gray-50 px-6 md:px-16 sticky top-0 z-30">
+                                <button 
+                                    onClick={() => setActiveTab('overview')}
+                                    className={`px-6 py-4 text-sm font-bold uppercase tracking-wide border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'overview' ? 'border-accent text-accent' : 'border-transparent text-gray-500 hover:text-charcoal'}`}
+                                >
+                                    <FileText className="w-4 h-4" /> Overview & Report
+                                </button>
+                                <button 
+                                    onClick={() => setActiveTab('prototype')}
+                                    className={`px-6 py-4 text-sm font-bold uppercase tracking-wide border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'prototype' ? 'border-accent text-accent' : 'border-transparent text-gray-500 hover:text-charcoal'}`}
+                                >
+                                    <Play className="w-4 h-4" /> Interactive Prototype
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Content Body */}
+                        <div className="flex-1 bg-white relative">
+                            
+                            {/* VIEW: PROTOTYPE */}
+                            {/* We keep the iframe mounted but hidden if user switches tabs to avoid reloading */}
+                            {project.prototypeUrl && shouldLoadIframe && (
+                                <div className={`w-full h-full min-h-[600px] flex-col relative bg-gray-100 ${activeTab === 'prototype' ? 'flex' : 'hidden'}`}>
+                                     {/* Loading Indicator */}
+                                     {iframeLoading && (
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 z-10">
+                                            <Loader2 className="w-10 h-10 animate-spin text-accent mb-4" />
+                                            <p className="font-medium text-sm">Loading Figma Prototype...</p>
+                                        </div>
+                                     )}
+                                     
+                                     <iframe 
+                                        src={figmaEmbedUrl}
+                                        className={`w-full h-full flex-1 border-0 transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                                        allowFullScreen
+                                        loading="lazy"
+                                        onLoad={() => setIframeLoading(false)}
+                                        title="Figma Prototype"
+                                     ></iframe>
+                                     
+                                     <div className="bg-white border-t border-gray-200 p-4 text-center text-xs text-gray-500">
+                                        <p>Prototype loaded via Figma Embed. Interact directly with the design above.</p>
+                                     </div>
+                                </div>
+                            )}
+
+                            {/* VIEW: OVERVIEW */}
+                            {activeTab === 'overview' && (
+                                <div className="max-w-5xl mx-auto p-6 md:p-16 space-y-12 animate-fade-in">
+
+                                    {/* Mobile Actions */}
+                                    <div className="md:hidden flex flex-col gap-3">
+                                        {project.prototypeUrl && (
+                                            <button 
+                                                onClick={() => setActiveTab('prototype')}
+                                                className="flex items-center justify-center gap-2 w-full py-3 bg-accent text-white rounded-xl font-bold"
+                                            >
+                                                <Play className="w-4 h-4 fill-current" /> View Prototype
+                                            </button>
+                                        )}
+                                        {pdfUrl && isConfigured && (
+                                            <a 
+                                                href={pdfUrl} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="flex items-center justify-center gap-2 w-full py-3 bg-charcoal text-white rounded-xl font-bold"
+                                            >
+                                                <FileText className="w-4 h-4" /> Open PDF
+                                            </a>
+                                        )}
+                                    </div>
+
+                                    {/* PDF Embed Section */}
+                                    {pdfUrl && (
+                                        <div className="w-full bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                                            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
+                                                <h3 className="font-bold text-charcoal flex items-center gap-2">
+                                                    <FileText className="w-5 h-5 text-accent" />
+                                                    Project Document
+                                                </h3>
+                                                {isConfigured && (
+                                                    <a 
+                                                        href={pdfUrl} 
+                                                        target="_blank" 
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center gap-2 px-4 py-2 bg-charcoal text-white text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-accent transition-colors shadow-sm"
+                                                    >
+                                                        Download / Open Fullscreen <ArrowUpRight className="w-3 h-3" />
+                                                    </a>
+                                                )}
+                                            </div>
+                                            <div className="aspect-[4/3] md:aspect-[16/9] w-full bg-gray-100 relative h-[500px] md:h-[600px] flex items-center justify-center">
+                                                {!isConfigured ? (
+                                                    <div className="text-center p-6">
+                                                        <AlertTriangle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                                                        <h3 className="text-xl font-bold text-charcoal mb-2">Supabase Not Configured</h3>
+                                                        <p className="text-gray-500 max-w-md mx-auto">
+                                                            Please update the <code>SUPABASE_CONFIG</code> in the code with your Project URL to view the PDF.
+                                                            <br/>
+                                                            Filename: <span className="font-mono bg-gray-200 px-1 rounded text-sm">{project.pdfFile}</span>
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <iframe 
+                                                        src={viewerUrl}
+                                                        className="w-full h-full border-0"
+                                                        title="PDF Viewer"
+                                                        loading="lazy"
+                                                    ></iframe>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                                        {/* Main Content Column */}
+                                        <div className="md:col-span-8 space-y-8">
+                                            <div>
+                                                <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Overview</h3>
+                                                <p className="text-lg md:text-xl text-charcoal leading-relaxed font-medium">{project.description}</p>
+                                            </div>
+                                            
+                                            <div className="grid grid-cols-1 gap-6">
+                                                {project.problem && (
+                                                    <div className="bg-subtle/50 p-8 rounded-2xl border border-gray-100">
+                                                        <h4 className="font-bold text-charcoal mb-3 flex items-center gap-2 font-display text-lg">
+                                                            <Target className="w-5 h-5 text-accent" />
+                                                            The Challenge
+                                                        </h4>
+                                                        <p className="text-gray-600 leading-relaxed">{project.problem}</p>
+                                                    </div>
+                                                )}
+                                                {project.solution && (
+                                                    <div className="bg-blue-50/50 p-8 rounded-2xl border border-blue-100">
+                                                        <h4 className="font-bold text-charcoal mb-3 flex items-center gap-2 font-display text-lg">
+                                                            <Lightbulb className="w-5 h-5 text-accent" />
+                                                            The Solution
+                                                        </h4>
+                                                        <p className="text-gray-600 leading-relaxed">{project.solution}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Sidebar Column */}
+                                        <div className="md:col-span-4 space-y-8">
+                                            <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 space-y-6">
+                                                <div>
+                                                    <h4 className="text-xs font-bold uppercase text-gray-400 tracking-widest mb-2">Role</h4>
+                                                    <p className="font-medium text-charcoal">UI/UX Designer</p>
+                                                </div>
+                                                {project.outcome && (
+                                                    <div>
+                                                        <h4 className="text-xs font-bold uppercase text-gray-400 tracking-widest mb-2">Impact</h4>
+                                                        <p className="font-medium text-charcoal">{project.outcome}</p>
+                                                    </div>
+                                                )}
+                                                <div>
+                                                    <h4 className="text-xs font-bold uppercase text-gray-400 tracking-widest mb-2">Tools</h4>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {project.tags.map(tag => (
+                                                            <span key={tag} className="px-3 py-1 bg-white rounded-md text-xs font-medium text-gray-600 border border-gray-200 shadow-sm">{tag}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Process Section */}
+                                    {project.process && project.process.length > 0 && (
+                                        <div>
+                                            <h3 className="text-2xl font-bold font-display text-charcoal mb-8 text-center md:text-left">Design Process</h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                                {project.process.map((step, idx) => (
+                                                    <div key={idx} className="bg-gray-50 p-6 rounded-2xl border border-gray-100 relative group hover:bg-white hover:shadow-lg transition-all">
+                                                        <span className="absolute top-4 right-4 text-6xl font-display font-bold text-gray-200 opacity-50 group-hover:text-accent/10 transition-colors select-none">
+                                                            {idx + 1}
+                                                        </span>
+                                                        <h4 className="text-lg font-bold text-charcoal mb-2 relative z-10">{step.step}</h4>
+                                                        <p className="text-sm text-gray-500 relative z-10">{step.desc}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Research & Personas Section */}
+                                    {project.personas && project.personas.length > 0 && (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-100 pt-12">
+                                            <div>
+                                                <h3 className="text-lg font-bold font-display text-charcoal mb-6">Target Persona</h3>
+                                                <div className="flex items-start gap-4 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                                                    <div className="w-12 h-12 shrink-0 bg-white rounded-full flex items-center justify-center text-charcoal shadow-sm">
+                                                        <User size={20} />
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-bold text-charcoal">{project.personas[0].name}</h4>
+                                                        <p className="text-sm text-accent font-medium mb-2">{project.personas[0].role}</p>
+                                                        <p className="text-sm text-gray-600 italic">"{project.personas[0].painPoint}"</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {project.research && (
+                                                <div>
+                                                    <h3 className="text-lg font-bold font-display text-charcoal mb-6">Key Insight</h3>
+                                                    <div className="h-full bg-charcoal rounded-2xl p-6 text-white flex flex-col justify-center relative overflow-hidden group">
+                                                        <div className="absolute right-0 top-0 w-32 h-32 bg-accent/20 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2 group-hover:bg-accent/30 transition-colors"></div>
+                                                        <span className="text-4xl font-display font-bold text-accent mb-1">{project.research.stat}</span>
+                                                        <p className="text-gray-300 text-sm font-medium">{project.research.statDesc}</p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            </div>
+                                    )}
+                                    
+                                    <div className="flex justify-center pt-8">
+                                            <Button onClick={onClose} secondary>Close Project</Button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const WorkSection = () => {
+            const [filter, setFilter] = useState('all');
+            const [selectedProject, setSelectedProject] = useState(null);
+            
+            const filteredProjects = RESUME.projects.filter(p => 
+                filter === 'all' ? true : p.category === filter
+            );
+
+            const featuredProject = filteredProjects.find(p => p.featured);
+            const otherProjects = filteredProjects.filter(p => !p.featured);
+            
+            const displayList = filter === 'all' && featuredProject 
+                ? [featuredProject, ...otherProjects] 
+                : filteredProjects;
+
+            return (
+                <section id="work" className="py-20 md:py-32 container mx-auto px-6 md:px-12">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
+                        <div>
+                            <h2 className="font-display text-4xl md:text-6xl font-bold mb-4 text-charcoal">Selected Work</h2>
+                            <p className="text-gray-500 max-w-md text-base md:text-lg">Solving complex problems with simple, elegant design.</p>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-2">
+                            {RESUME.categories.map(cat => (
+                                <button 
+                                    key={cat.id}
+                                    onClick={() => setFilter(cat.id)}
+                                    className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all ${
+                                        filter === cat.id 
+                                        ? 'bg-charcoal text-white shadow-md' 
+                                        : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'
+                                    }`}
+                                >
+                                    {cat.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-16">
+                        {displayList.length > 0 ? (
+                            displayList.map((project) => (
+                                <ProjectCard 
+                                    key={project.id} 
+                                    project={project} 
+                                    featured={filter === 'all' && project.featured}
+                                    onOpenModal={setSelectedProject}
+                                />
+                            ))
+                        ) : (
+                            <div className="col-span-full py-20 text-center text-gray-400">
+                                <p>No projects found in this category.</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <CaseStudyModal 
+                        project={selectedProject} 
+                        onClose={() => setSelectedProject(null)} 
+                    />
+                </section>
+            );
+        };
+
+        const AboutSection = () => {
+            const ExperienceItem = ({ exp }) => (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 py-6 md:py-8 border-b border-gray-100 hover:bg-gray-50 transition-colors px-2 md:px-4 rounded-lg group">
+                    <div className="col-span-1">
+                        <span className="font-sans text-xs md:text-sm font-semibold text-gray-400 group-hover:text-accent transition-colors">
+                            {exp.period}
+                        </span>
+                    </div>
+                    <div className="col-span-3">
+                        <h3 className="font-display text-lg md:text-xl font-bold mb-1 text-charcoal">{exp.role}</h3>
+                        <h4 className="font-sans text-sm md:text-base text-gray-500 mb-3 md:mb-4">{exp.company}</h4>
+                        <ul className="space-y-2 text-gray-600 text-sm leading-relaxed">
+                            {exp.points.map((pt, i) => (
+                                <li key={i} className="flex gap-2">
+                                    <span className="text-accent mt-1.5">•</span>
+                                    {pt}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            );
+
+            return (
+                <section id="about" className="py-20 md:py-32 bg-white">
+                    <div className="container mx-auto px-6 md:px-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16">
+                            <div className="lg:col-span-4">
+                                <div className="static lg:sticky top-32">
+                                    <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 md:mb-8">About <br className="hidden md:block"/>Me</h2>
+                                    <div className="text-gray-500 mb-6 md:mb-8 leading-relaxed space-y-4 md:space-y-6">
+                                        <p className="font-medium text-charcoal text-base md:text-lg">
+                                            {RESUME.bio.intro}
+                                        </p>
+                                        <p className="text-sm md:text-base">
+                                            {RESUME.bio.valueProp}
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {RESUME.skills.map(skill => (
+                                            <span key={skill} className="px-3 py-2 md:px-4 md:py-2 bg-gray-50 rounded-lg text-xs md:text-sm font-medium text-gray-600 border border-gray-100">
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-8">
+                                <div className="mb-12 md:mb-16">
+                                    <h3 className="font-sans text-sm font-bold uppercase tracking-widest text-gray-400 mb-6 md:mb-8 border-b border-gray-100 pb-4">Work History</h3>
+                                    {RESUME.experience.map(exp => (
+                                        <ExperienceItem key={exp.id} exp={exp} />
+                                    ))}
+                                </div>
+
+                                <div>
+                                    <h3 className="font-sans text-sm font-bold uppercase tracking-widest text-gray-400 mb-6 md:mb-8 border-b border-gray-100 pb-4">Education</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                                        {RESUME.education.map((edu, idx) => (
+                                            <div key={idx} className="p-6 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+                                                <span className="text-accent text-xs font-bold uppercase mb-2 block">{edu.year}</span>
+                                                <h4 className="font-display text-lg font-bold">{edu.degree}</h4>
+                                                <p className="text-gray-500 text-sm mt-1">{edu.school}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const ContactSection = () => (
+            <footer id="contact" className="bg-charcoal text-white pt-20 md:pt-32 pb-12">
+                <div className="container mx-auto px-6 md:px-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 mb-16 md:mb-24">
+                        <div>
+                            <h2 className="font-display text-5xl md:text-8xl font-bold mb-6 md:mb-8 leading-tight">
+                                Let's work <br/><span className="text-gray-500">together.</span>
+                            </h2>
+                            <p className="text-gray-400 text-base md:text-lg max-w-md mb-8">
+                                Have a project in mind? Let's build something that solves real problems and looks great doing it.
+                            </p>
+                            <Button href={`mailto:${RESUME.contact.email}`} primary>Send an Email</Button>
+                        </div>
+                        <div className="flex flex-col justify-end items-start lg:items-end">
+                            <a href={`mailto:${RESUME.contact.email}`} className="group flex items-center gap-4 text-xl md:text-4xl font-display font-bold hover:text-accent transition-colors mb-4 break-all">
+                                {RESUME.contact.email}
+                                <ArrowUpRight className="w-6 h-6 md:w-10 md:h-10 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 shrink-0" />
+                            </a>
+                            <p className="text-lg md:text-xl text-gray-400">{RESUME.contact.phone}</p>
+                            <p className="text-base md:text-lg text-gray-500 mt-2">{RESUME.contact.address}</p>
+                        </div>
+                    </div>
+
+                    <div className="border-t border-white/10 pt-8 md:pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div className="flex gap-8">
+                            <a href={RESUME.contact.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors font-sans text-sm uppercase tracking-wider">
+                                    <Linkedin size={16} /> LinkedIn
+                            </a>
+                            <a href={RESUME.contact.behance} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors font-sans text-sm uppercase tracking-wider">
+                                <AtSign size={16} /> Behance
+                            </a>
+                        </div>
+                        <p className="text-gray-600 text-sm font-sans">© 2024 Snehashis Saha. Designed & Built.</p>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-offwhite selection:bg-accent selection:text-white">
+                    <NavBar />
+                    <Hero />
+                    <Marquee />
+                    <WorkSection />
+                    <AboutSection />
+                    <ContactSection />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>
+        );
+    </script>
+</body>
+</html>
