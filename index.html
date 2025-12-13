@@ -34,6 +34,7 @@
                         'marquee': 'marquee 40s linear infinite',
                         'modal-in': 'modalFadeIn 0.3s ease-out forwards',
                         'spin-slow': 'spin 3s linear infinite',
+                        'shine': 'shine 1.2s ease-in-out',
                     },
                     keyframes: {
                         fadeIn: {
@@ -51,6 +52,11 @@
                         modalFadeIn: {
                             'from': { opacity: '0', transform: 'scale(0.95)' },
                             'to': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        shine: {
+                            '0%': { transform: 'translateX(-100%)', opacity: '0' },
+                            '50%': { opacity: '0.5' },
+                            '100%': { transform: 'translateX(100%)', opacity: '0' }
                         }
                     }
                 }
@@ -87,7 +93,7 @@
     <div id="root"></div>
 
     <script type="text/babel" data-type="module" data-presets="react,typescript">
-        import React, { useState, useEffect } from 'react';
+        import React, { useState, useEffect, useRef } from 'react';
         import ReactDOM from 'react-dom/client';
         import { 
             Menu, X, AlertTriangle, ArrowUpRight, Download, Play, 
@@ -365,6 +371,29 @@
             return `${SUPABASE_CONFIG.PROJECT_URL}/storage/v1/object/public/${bucket}/${file}`;
         };
 
+        // Utility Hook for Intersection Observer (Animations)
+        const useOnScreen = (threshold = 0.1) => {
+            const [ref, setRef] = useState(null);
+            const [isVisible, setIsVisible] = useState(false);
+
+            useEffect(() => {
+                if (!ref) return;
+                const observer = new IntersectionObserver(
+                    ([entry]) => {
+                        if (entry.isIntersecting) {
+                            setIsVisible(true);
+                            observer.disconnect(); // Animate once
+                        }
+                    },
+                    { threshold }
+                );
+                observer.observe(ref);
+                return () => observer.disconnect();
+            }, [ref, threshold]);
+
+            return [setRef, isVisible];
+        };
+
         // --- COMPONENTS ---
 
         const Button = ({ 
@@ -606,24 +635,38 @@
             </div>
         );
 
-        const ProjectCard = ({ project, featured, onOpenModal }) => {
+        const ProjectCard = ({ project, featured, onOpenModal, index }) => {
+            const [setRef, isVisible] = useOnScreen(0.1);
             const isFeatured = featured === true;
             const aspectRatio = isFeatured ? 'aspect-video md:aspect-[21/9]' : 'aspect-[4/3]';
             
+            // Stagger animation based on index
+            const transitionDelay = `${index * 100}ms`;
+            
             return (
-                <div className={`group block w-full mb-8 md:mb-12 ${isFeatured ? 'col-span-1 md:col-span-2' : 'col-span-1'}`}>
+                <div 
+                    ref={setRef}
+                    style={{ transitionDelay }}
+                    className={`group block w-full mb-8 md:mb-12 ${isFeatured ? 'col-span-1 md:col-span-2' : 'col-span-1'} 
+                        transform transition-all duration-700 ease-out
+                        ${isVisible ? 'opacity-100 translate-y-0 filter-blur-0' : 'opacity-0 translate-y-16 blur-sm'}
+                    `}
+                >
                     {/* Image Container */}
                     <div 
                         onClick={() => onOpenModal(project)}
                         className={`overflow-hidden rounded-2xl bg-gray-100 mb-4 md:mb-6 relative shadow-sm transition-all duration-500 hover:shadow-2xl cursor-pointer ${aspectRatio}`}
                     >
+                         {/* Shine Effect */}
+                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent z-10 -translate-x-full group-hover:animate-[shine_1.5s_ease-in-out]" style={{ content: '""' }} />
+
                         <img 
                             src={project.image} 
                             alt={project.title} 
-                            className="h-full w-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+                            className="h-full w-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105 group-hover:rotate-1"
                         />
                         {/* Overlay */}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-3">
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 z-20 backdrop-blur-[2px]">
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -1018,12 +1061,13 @@
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-16">
                         {displayList.length > 0 ? (
-                            displayList.map((project) => (
+                            displayList.map((project, index) => (
                                 <ProjectCard 
                                     key={project.id} 
                                     project={project} 
                                     featured={filter === 'all' && project.featured}
                                     onOpenModal={setSelectedProject}
+                                    index={index}
                                 />
                             ))
                         ) : (
